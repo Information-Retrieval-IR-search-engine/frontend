@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IR Search with Suggestions</title>
+  <style>
+    body {
+      background-color: #f4f6f8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 80px;
+      margin: 0;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 700px;
+      position: relative;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 2em;
+      color: #333;
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    input[type="text"],
+    select,
+    button {
+      padding: 12px 15px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .input-wrapper {
+      position: relative;
+      flex-grow: 1;
+      min-width: 300px;
+    }
+
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      border-top: none;
+      max-height: 150px;
+      overflow-y: auto;
+      z-index: 10;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .suggestion-item {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .suggestion-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    select {
+      flex: 0 0 150px;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #results {
+      margin-top: 30px;
+    }
+
+    .result-item {
+      background: #f9f9f9;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border-left: 5px solid #007BFF;
+    }
+
+    .result-item strong {
+      color: #333;
+    }
+
+    .result-item em {
+      color: #666;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>IR Search with Suggestions</h1>
+    <form id="searchForm" autocomplete="off">
+      <div class="input-wrapper">
+        <input type="text" id="query" name="query" placeholder="Enter your query" />
+        <div id="suggestions" class="suggestions" hidden></div>
+      </div>
+      <select id="algorithm" name="algorithm">
+        <option value="tfidf">TF-IDF</option>
+        <option value="bm25">BM25</option>
+      </select>
+      <button type="submit">Search</button>
+    </form>
+    <div id="results"></div>
+  </div>
+
+  <script>
+    const queryInput = document.getElementById("query");
+    const suggestionsBox = document.getElementById("suggestions");
+
+    queryInput.addEventListener("input", async function () {
+      const value = this.value.trim();
+      if (!value) {
+        suggestionsBox.hidden = true;
+        return;
+      }
+
+      // Replace with actual API call:
+       const response = await fetch(`http://localhost:8001/suggest?q=${encodeURIComponent(value)}`);
+       const suggestions = await response.json();
+
+      // Simulated suggestions
+      /*const suggestions = ["information retrieval", "inverted index", "indexing documents", "intelligent search", "interactive systems"]
+        .filter(s => s.toLowerCase().includes(value.toLowerCase()));*/
+
+      if (suggestions.length > 0) {
+        suggestionsBox.innerHTML = "";
+        suggestions.forEach(s => {
+          const div = document.createElement("div");
+          div.className = "suggestion-item";
+          div.textContent = s;
+          div.onclick = () => {
+            queryInput.value = s;
+            suggestionsBox.hidden = true;
+          };
+          suggestionsBox.appendChild(div);
+        });
+        suggestionsBox.hidden = false;
+      } else {
+        suggestionsBox.hidden = true;
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!suggestionsBox.contains(e.target) && e.target !== queryInput) {
+        suggestionsBox.hidden = true;
+      }
+    });
+
+    document.getElementById("searchForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      // Replace with actual API call:
+       const response = await fetch("http://localhost:8000/search", {
+         method: "POST",
+         body: formData
+       });
+       const data = await response.json();
+
+      /*const data = {
+        "results": [
+          { "doc_id": 1, "text": "This is a sample document.", "score": 0.8 },
+          { "doc_id": 2, "text": "Another document related to your query.", "score": 0.6 }
+        ]
+      };*/
+
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "";
+      data.results.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "result-item";
+        div.innerHTML = `<p><strong>[${r.doc_id}]</strong> ${r.text.substring(0, 150)}... <br><em>(score: ${r.score.toFixed(3)})</em></p>`;
+        resultsDiv.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>

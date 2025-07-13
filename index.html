@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IR Toolkit Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 80px;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 2.5em;
+      margin-bottom: 40px;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      width: 90%;
+      max-width: 900px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      text-decoration: none;
+      color: #333;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      background-color: #f0f8ff;
+    }
+
+    .card h2 {
+      font-size: 1.3em;
+      margin: 0;
+      color: #007BFF;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>IR Toolkit Dashboard</h1>
+  <div class="card-container">
+    <a href="std_search.html" class="card">
+      <h2>TF-IDF</h2>
+    </a>
+    <a href="embedding_search.html" class="card">
+      <h2>Embedding Search</h2>
+    </a>
+    <a href="hybrid_search.html" class="card">
+      <h2>Hybrid Search</h2>
+    </a>
+    <a href="query_suggestion.html" class="card">
+      <h2>Query Suggestion</h2>
+    </a>
+    <a href="rag.html" class="card">
+      <h2>RAG Answering</h2>
+    </a>
+  </div>
+
+</body>
+</html>
