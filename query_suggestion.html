@@ -151,7 +151,7 @@
       }
 
       // Replace with actual API call:
-       const response = await fetch(`http://localhost:8001/suggest?q=${encodeURIComponent(value)}`);
+       const response = await fetch(`http://localhost:8004/suggest?q=${encodeURIComponent(value)}`);
        const suggestions = await response.json();
 
       // Simulated suggestions
@@ -187,7 +187,7 @@
       const formData = new FormData(this);
 
       // Replace with actual API call:
-       const response = await fetch("http://localhost:8000/search", {
+       const response = await fetch("http://localhost:8001/search", {
          method: "POST",
          body: formData
        });
