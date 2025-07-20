@@ -96,10 +96,9 @@
     <h1>Simple IR Search</h1>
     <form id="searchForm">
       <input type="text" id="query" name="query" placeholder="Enter your query" required />
-      <select id="algorithm" name="algorithm">
-        <option value="tfidf">TF-IDF</option>
-        <option value="bm25">BM25</option>
-        <option value="hybrid">Hybrid</option>
+      <select id="dataset" name="dataset">
+        <option value="antique">antique</option>
+        <option value="quora">quora</option>
       </select>
       <button type="submit">Search</button>
     </form>
@@ -111,24 +110,25 @@
       e.preventDefault();
 
       const query = document.getElementById("query").value;
-      const algorithm = document.getElementById("algorithm").value;
+      const dataset = document.getElementById("dataset").value;
 
       let url = "";
       let options = {};
 
-      if (algorithm === "hybrid") {
-        url = "http://localhost:8000/hybrid_search?query=" + encodeURIComponent(query);
+     // if (algorithm === "hybrid") {
+        url = "http://localhost:8000/hybrid_search?query=" + encodeURIComponent(query) + "&dataset=" + encodeURIComponent(dataset);
         options = { method: "GET" };
-      } else {
-        url = "http://localhost:8000/search";
+ /*     } else {
+        url = "http://localhost:8000/hybrid_search";
         const formData = new FormData();
         formData.append("query", query);
-        formData.append("algorithm", algorithm);
+        formData.append("dataset", dataset);
         options = {
           method: "POST",
           body: formData
         };
       }
+        */
 
       const response = await fetch(url, options);
       const data = await response.json();
